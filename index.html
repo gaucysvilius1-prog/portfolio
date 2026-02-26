@@ -41,6 +41,26 @@
     .reveal.visible{opacity:1;transform:none;}
     .d1{transition-delay:.1s;}.d2{transition-delay:.25s;}.d3{transition-delay:.4s;}
     @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+    *{cursor:none!important;}
+    .mo{display:none!important;}
+    h2 span.custom-h2,h2 span.custom-h3,h2 span.custom-h1{color:var(--text)!important;}
+    .bg-custom-bg{background:transparent!important;}
+    .custom-h4{color:var(--text)!important;}
+    mark.bg-custom-highlight{background:rgba(63,35,234,.2)!important;color:var(--text)!important;}
+    h2.reveal{font-size:clamp(1.3rem,2.8vw,2rem)!important;font-weight:600!important;letter-spacing:-.01em!important;opacity:.95;}
+    .custom-p span{color:rgba(240,240,240,.75)!important;}
+    .section-wrapper{background:var(--bg)!important;}
+    h4 span.custom-h4{color:var(--text)!important;font-size:1rem!important;font-weight:600!important;}
+    h2[data-label]::before{content:attr(data-label);display:block;font-size:.65rem;font-weight:700;letter-spacing:.18em;color:var(--accent);text-transform:uppercase;margin-bottom:.4rem;opacity:.8;}
+    .space-y-2 h4{margin-top:.75rem;}
+    .space-y-2 .custom-p span{font-size:.82rem;letter-spacing:.04em;font-variant-numeric:tabular-nums;}
+    #work-paid,#work-influencer,#work-goose,#work-organic{border-top:1px solid rgba(255,255,255,.05);}
+    #stats .custom-h2{color:var(--text)!important;}
+    #contact .space-y-text-block{text-align:center;}
+    #contact h2{margin-left:auto;margin-right:auto;}
+    .vid-wrap video{transition:transform .3s ease;}
+    .vid-wrap:hover video{transform:scale(1.02);}
+    .reveal img.rounded-xl{box-shadow:0 0 0 1px rgba(63,35,234,.2),0 24px 60px rgba(0,0,0,.5);}
   </style>
 
 </head>
@@ -94,7 +114,7 @@
             </div>
             <div class="relative">
               <div
-                class="mx-auto grid w-full grid-cols-4 gap-x-6 px-6 @tablet:grid-cols-8 @laptop:grid-cols-14 @laptop:gap-x-12 max-w-screen-desktop space-y-12 @laptop:space-y-0 py-12 items-center" style="padding:6rem 2rem;max-width:1200px;margin:0 auto;">
+                class="mx-auto grid w-full grid-cols-4 gap-x-6 px-6 @tablet:grid-cols-8 @laptop:grid-cols-14 @laptop:gap-x-12 max-w-screen-desktop space-y-12 @laptop:space-y-0 py-12 items-center" style="padding:6rem 2rem;max-width:1200px;margin:0 auto;background:linear-gradient(to bottom, rgba(63,35,234,.04), transparent);">
                 <div
                   class="relative cursor-auto col-span-full @tablet:col-span-6 @tablet:col-start-2 @laptop:row-start-1 @laptop:col-start-2 @laptop:col-span-6 reveal">
                   <img
@@ -127,7 +147,7 @@
                   <div
                     class="col-span-full col-start-1 @tablet:col-span-6 @tablet:col-start-2 @laptop:col-span-8 @laptop:col-start-2 py-2 @tablet:py-4 @laptop:py-6">
                     <div class="space-y-text-block text-left">
-                      <h2 class="relative reveal" style="font-size:clamp(1.8rem,4vw,3rem);font-weight:900;letter-spacing:-.02em;padding-left:1.25rem;border-left:4px solid #3F23EA;"><span class="custom-h2">These might make you want to cry (and buy)
+                      <h2 class="relative reveal" data-label="PAID ADS" style="font-size:clamp(1.1rem,2.2vw,1.6rem);font-weight:600;letter-spacing:.02em;padding-left:1rem;border-left:3px solid #3F23EA;color:#f0f0f0;line-height:1.3;opacity:.9;"><span class="custom-h2">These might make you want to cry (and buy)
                             😭</span></h2>
                     </div>
                   </div>
@@ -256,7 +276,7 @@
                   <div
                     class="col-span-full col-start-1 @tablet:col-span-6 @tablet:col-start-2 @laptop:col-span-8 @laptop:col-start-2 py-2 @tablet:py-4 @laptop:py-6">
                     <div class="space-y-text-block text-left">
-                      <h2 class="relative reveal" style="font-size:clamp(1.8rem,4vw,3rem);font-weight:900;letter-spacing:-.02em;padding-left:1.25rem;border-left:4px solid #3F23EA;"><span class="custom-h3">Some of these might make you want to be influencer (and buy) 💃</span></h2>
+                      <h2 class="relative reveal" data-label="INFLUENCER" style="font-size:clamp(1.1rem,2.2vw,1.6rem);font-weight:600;letter-spacing:.02em;padding-left:1rem;border-left:3px solid #3F23EA;color:#f0f0f0;line-height:1.3;opacity:.9;"><span class="custom-h3">Some of these might make you want to be influencer (and buy) 💃</span></h2>
                     </div>
                   </div>
                 </div>
@@ -384,7 +404,7 @@
                   <div
                     class="col-span-full col-start-1 @tablet:col-span-6 @tablet:col-start-2 @laptop:col-span-8 @laptop:col-start-2 py-2 @tablet:py-4 @laptop:py-6">
                     <div class="space-y-text-block text-left">
-                      <h2 class="relative reveal" style="font-size:clamp(1.8rem,4vw,3rem);font-weight:900;letter-spacing:-.02em;padding-left:1.25rem;border-left:4px solid #3F23EA;"><span class="custom-h2">Goose hook was good and funny, converted quite
+                      <h2 class="relative reveal" data-label="GOOSE SERIES" style="font-size:clamp(1.1rem,2.2vw,1.6rem);font-weight:600;letter-spacing:.02em;padding-left:1rem;border-left:3px solid #3F23EA;color:#f0f0f0;line-height:1.3;opacity:.9;"><span class="custom-h2">Goose hook was good and funny, converted quite
                             well 🦢🦢</span></h2>
                     </div>
                   </div>
@@ -513,7 +533,7 @@
                   <div
                     class="col-span-full col-start-1 @tablet:col-span-6 @tablet:col-start-2 @laptop:col-span-8 @laptop:col-start-2 py-2 @tablet:py-4 @laptop:py-6">
                     <div class="space-y-text-block text-left">
-                      <h2 class="relative reveal" style="font-size:clamp(1.8rem,4vw,3rem);font-weight:900;letter-spacing:-.02em;padding-left:1.25rem;border-left:4px solid #3F23EA;"><span class="custom-h1">ORGANIC WINNERS</span></h2>
+                      <h2 class="relative reveal" data-label="ORGANIC" style="font-size:clamp(1.1rem,2.2vw,1.6rem);font-weight:600;letter-spacing:.02em;padding-left:1rem;border-left:3px solid #3F23EA;color:#f0f0f0;line-height:1.3;opacity:.9;"><span class="custom-h1">ORGANIC WINNERS</span></h2>
                     </div>
                   </div>
                 </div>
@@ -609,7 +629,7 @@
                 </div>
               </div>
             </div>
-            <div class="relative" id="stats">
+            <div class="relative" id="stats" style="background:linear-gradient(to bottom,transparent,rgba(63,35,234,.05),transparent);">
               <div
                 class="mx-auto grid w-full grid-cols-4 gap-x-6 px-6 @tablet:grid-cols-8 @laptop:grid-cols-14 @laptop:gap-x-12 max-w-screen-desktop">
                 <div
@@ -688,7 +708,7 @@
                 <section
                   class="col-span-full py-12 @tablet:col-span-6 @tablet:col-start-2 @tablet:py-14 @laptop:col-span-12 @laptop:col-start-2 @laptop:py-18">
                   <div
-                    class="grid justify-between justify-items-center gap-6 bg-custom-bg text-center grid-cols-4 @tablet:grid-cols-3 @laptop:grid-cols-3">
+                    class="grid justify-between justify-items-center gap-6 bg-custom-bg text-center grid-cols-4 @tablet:grid-cols-3 @laptop:grid-cols-3" style="background:transparent!important;padding:2rem 0;">
                     <div class="relative w-full flex-1 col-span-2 @tablet:col-span-1 @laptop:col-span-1">
                       <div class="relative w-full">
                         <div class="relative h-6 tablet:h-8 laptop:h-10">
@@ -739,7 +759,7 @@
                   class="col-span-full h-max cursor-text space-y-8 @tablet:col-span-6 @tablet:col-start-2 @laptop:col-span-9 @laptop:col-start-2">
                   <div class="relative flex flex-col items-stretch space-y-8">
                     <div class="space-y-text-block text-left">
-                      <h2 class="relative"><span class="custom-h2">Vilius Gaučys</span></h2>
+                      <h2 class="relative" style="font-size:1.1rem;font-weight:700;color:var(--text);letter-spacing:.05em;text-transform:uppercase;margin-bottom:.5rem;">Vilius Gaučys</h2>
                       <p class="relative min-h-[1.5rem] custom-p" style="color:#888;font-size:.85rem;line-height:2;"><span>Vilnius, Lithuania | +370&#54;&#52;&#54;&#53;&#55;&#49;&#55;&#56; |
                           gaucysvilius&#49;&#64;gmail&#46;com</span></p>
                       <p class="relative min-h-[1.5rem] custom-p" style="color:#888;font-size:.85rem;line-height:2;"><span>© Vilius Gaučys, 2026</span></p>
@@ -771,20 +791,14 @@
     <div id="cursor"></div><div id="cring"></div><div id="sprog"></div>
     <script>
       const cur=document.getElementById('cursor'),ring=document.getElementById('cring');
-      let mx=0,my=0,rx=0,ry=0;
+      let mx=-200,my=-200,rx=-200,ry=-200;
+      cur.style.left='-200px';cur.style.top='-200px';
+      ring.style.left='-200px';ring.style.top='-200px';
       document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
       (function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
       window.addEventListener('scroll',()=>{document.getElementById('sprog').style.width=(window.scrollY/(document.body.scrollHeight-window.innerHeight)*100)+'%';});
       const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:.15});
       document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-      document.querySelectorAll('.vid-wrap').forEach(w=>{
-        const mo=w.querySelector('.mo'),bc=w.querySelector('.bc'),bh=w.querySelector('.bh');
-        const txt=w.closest('[class*="space-y-6"]')?.querySelector('.custom-p span')?.textContent||'';
-        const ctr=parseFloat((txt.match(/CTR:\s*([\d.]+)/)||[])[1]||0);
-        const hook=parseFloat((txt.match(/Hook Rate:\s*([\d.]+)/)||[])[1]||0);
-        w.addEventListener('mouseenter',()=>{mo.style.opacity='1';bc.style.width=(ctr*15)+'%';bh.style.width=hook+'%';});
-        w.addEventListener('mouseleave',()=>{mo.style.opacity='0';bc.style.width='0%';bh.style.width='0%';});
-      });
       document.querySelectorAll('.sc').forEach(el=>new IntersectionObserver(([e])=>{
         if(e.isIntersecting&&!e.target.dataset.done){
           e.target.dataset.done='1';
