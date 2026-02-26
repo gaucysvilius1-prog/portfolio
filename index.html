@@ -688,9 +688,9 @@
                 </div>
               </div>
             </div>
-            <div class="relative" id="contact" style="background:linear-gradient(135deg,#0f0a2e,#0a0a0a);padding:8rem 2rem;text-align:center;">
+            <div class="relative" id="contact" style="background:linear-gradient(135deg,#0f0a2e,#0a0a0a);padding:4rem 2rem;text-align:center;">
               <div
-                class="mx-auto grid w-full grid-cols-4 gap-x-6 px-6 @tablet:grid-cols-8 @laptop:grid-cols-14 @laptop:gap-x-12 max-w-screen-desktop space-y-12 @laptop:space-y-0 py-12">
+                class="mx-auto grid w-full grid-cols-4 gap-x-6 px-6 @tablet:grid-cols-8 @laptop:grid-cols-14 @laptop:gap-x-12 max-w-screen-desktop space-y-12 @laptop:space-y-0 py-4">
                 <div
                   class="relative cursor-auto col-span-full @tablet:col-span-6 @tablet:col-start-2 @laptop:row-start-1 @laptop:col-start-2 @laptop:col-span-6">
                   <div class="relative flex flex-col items-stretch space-y-8">
@@ -752,40 +752,20 @@
               </div>
             </div>
           </div>
-          <footer id="footer">
-            <div class="bg-custom-button-rgba/10" style="border-top:1px solid rgba(255,255,255,.07);padding:3rem 2rem;">
-              <div
-                class="mx-auto grid w-full grid-cols-4 px-6 @tablet:grid-cols-8 @laptop:grid-cols-14 @laptop:gap-x-12 max-w-screen-desktop relative py-12 @tablet:py-14 @laptop:py-12 gap-12">
-                <div
-                  class="col-span-full h-max cursor-text space-y-8 @tablet:col-span-6 @tablet:col-start-2 @laptop:col-span-9 @laptop:col-start-2">
-                  <div class="relative flex flex-col items-stretch space-y-8">
-                    <div class="space-y-text-block text-left">
-                      <h2 class="relative" style="font-size:1.1rem;font-weight:700;color:var(--text);letter-spacing:.05em;text-transform:uppercase;margin-bottom:.5rem;">Vilius Gaučys</h2>
-                      <p class="relative min-h-[1.5rem] custom-p" style="color:#888;font-size:.85rem;line-height:2;"><span>Vilnius, Lithuania | +370&#54;&#52;&#54;&#53;&#55;&#49;&#55;&#56; |
-                          gaucysvilius&#49;&#64;gmail&#46;com</span></p>
-                      <p class="relative min-h-[1.5rem] custom-p" style="color:#888;font-size:.85rem;line-height:2;"><span>© Vilius Gaučys, 2026</span></p>
-                    </div>
-                    <div class="self-start">
-                      <div class="flex min-w-[6rem] items-center space-x-3 justify-start"><a
-                          href="https://www.linkedin.com/in/viliusgaucys"
-                          aria-label="Visit Vilius Gaučys on LinkedIn (opens in new tab)" target="_blank"
-                          rel="noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                            viewBox="0 0 24 24" aria-hidden="true"
-                            class="h-6 cursor-pointer text-custom-button hover:opacity-60">
-                            <g clip-path="url(#linkedin_svg__a)">
-                              <path fill-rule="evenodd"
-                                d="M4 2h16a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Zm1.494 5.903a1.72 1.72 0 1 0 1.91-2.86 1.72 1.72 0 0 0-1.91 2.86Zm10.583 11.138h2.964l.001-5.235c0-2.57-.554-4.546-3.557-4.546a3.118 3.118 0 0 0-2.807 1.542h-.04V9.497H9.793v9.544h2.964V14.32c0-1.245.236-2.45 1.78-2.45 1.52 0 1.54 1.424 1.54 2.53v4.641Zm-8.146 0H4.965V9.497H7.93v9.544Z"
-                                clip-rule="evenodd"></path>
-                            </g>
-                            <defs>
-                              <clipPath id="linkedin_svg__a">
-                                <path fill="#fff" d="M0 0h24v24H0z"></path>
-                              </clipPath>
-                            </defs>
-                          </svg></a></div>
-                    </div>
-                  </div>
+          <footer id="footer" style="border-top:1px solid rgba(63,35,234,.25);background:linear-gradient(to top,rgba(63,35,234,.05),transparent);padding:3rem 2rem 2rem;">
+            <div style="max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:2rem;">
+              <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:2rem;">
+                <div>
+                  <h2 style="font-size:1.1rem;font-weight:800;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.75rem;text-shadow:0 0 24px rgba(63,35,234,.6);">Vilius Gaučys</h2>
+                  <p style="color:#666;font-size:.8rem;line-height:2;">Vilnius, Lithuania</p>
+                  <p style="color:#666;font-size:.8rem;line-height:2;"><a href="tel:+37064657178" style="color:#666;text-decoration:none;transition:color .2s;" onmouseenter="this.style.color='#f0f0f0'" onmouseleave="this.style.color='#666'">+37064657178</a></p>
+                  <p style="color:#666;font-size:.8rem;line-height:2;"><a href="mailto:gaucysvilius1@gmail.com" style="color:#666;text-decoration:none;transition:color .2s;" onmouseenter="this.style.color='var(--accent)'" onmouseleave="this.style.color='#666'">gaucysvilius1@gmail.com</a></p>
                 </div>
+                <a href="https://www.linkedin.com/in/viliusgaucys" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:.6rem;color:#888;text-decoration:none;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;border:1px solid rgba(255,255,255,.1);padding:.65rem 1.25rem;border-radius:8px;transition:border-color .2s,color .2s,box-shadow .2s;" onmouseenter="this.style.borderColor='rgba(63,35,234,.6)';this.style.color='#f0f0f0';this.style.boxShadow='0 0 14px rgba(63,35,234,.3)'" onmouseleave="this.style.borderColor='rgba(255,255,255,.1)';this.style.color='#888';this.style.boxShadow=''"><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" width="16" height="16"><g clip-path="url(#lf2)"><path fill-rule="evenodd" d="M4 2h16a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Zm1.494 5.903a1.72 1.72 0 1 0 1.91-2.86 1.72 1.72 0 0 0-1.91 2.86Zm10.583 11.138h2.964l.001-5.235c0-2.57-.554-4.546-3.557-4.546a3.118 3.118 0 0 0-2.807 1.542h-.04V9.497H9.793v9.544h2.964V14.32c0-1.245.236-2.45 1.78-2.45 1.52 0 1.54 1.424 1.54 2.53v4.641Zm-8.146 0H4.965V9.497H7.93v9.544Z" clip-rule="evenodd"></path></g><defs><clipPath id="lf2"><path fill="#fff" d="M0 0h24v24H0z"></path></clipPath></defs></svg>LinkedIn</a>
+              </div>
+              <div style="border-top:1px solid rgba(255,255,255,.05);padding-top:1.25rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem;">
+                <p style="color:#333;font-size:.72rem;letter-spacing:.06em;">© Vilius Gaučys, 2026</p>
+                <p style="color:#2a2a2a;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;">Creative Strategist</p>
               </div>
             </div>
           </footer>
