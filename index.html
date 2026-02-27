@@ -86,7 +86,9 @@
 
     /* Center play/pause button */
     .vp-center{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;}
-    .vp-playbtn{background:none;border:none;cursor:pointer!important;padding:0;width:64px;height:64px;pointer-events:auto;transition:transform .2s,opacity .2s;filter:drop-shadow(0 0 18px rgba(63,35,234,.7));}
+    .vp-playbtn{background:none;border:none;outline:none;cursor:pointer!important;padding:0;width:64px;height:64px;pointer-events:auto;transition:transform .2s,opacity .2s;filter:drop-shadow(0 0 18px rgba(63,35,234,.7));}
+    .vp-playbtn:focus{outline:none;}
+    .vp-vol:focus,.vp-fs:focus{outline:none;}
     .vp-playbtn:hover{transform:scale(1.1);}
     .vp-playbtn svg{width:64px;height:64px;display:block;}
     .vp-icon-play,.vp-icon-pause{transition:opacity .15s;}
@@ -106,15 +108,17 @@
     .vp-vol,.vp-fs{background:none;border:none;cursor:pointer!important;padding:.2rem;display:flex;align-items:center;justify-content:center;opacity:.85;transition:opacity .2s,transform .2s;}
     .vp-vol:hover,.vp-fs:hover{opacity:1;transform:scale(1.15);}
 
-    /* Paused state — show play button always */
-    .vp-paused .vp-icon-play{display:block!important;}
-    .vp-paused .vp-icon-pause{display:none!important;}
-    .vp-playing .vp-icon-play{display:none!important;}
-    .vp-playing .vp-icon-pause{display:block!important;}
+    /* Hide entire play button while playing — only show when paused/idle */
+    .vp-playing .vp-playbtn{opacity:0!important;pointer-events:none!important;}
+    .vp-paused .vp-playbtn{opacity:1;pointer-events:auto;}
+    .vp-idle .vp-playbtn{opacity:1;pointer-events:auto;}
 
-    /* Initial state */
+    /* Always show play icon, never show pause icon */
+    .vp-icon-pause{display:none!important;}
+    .vp-icon-play{display:block!important;}
+
+    /* Hide controls when idle */
     .vp-idle .vp-controls{opacity:0!important;pointer-events:none!important;}
-    .vp-idle .vp-playbtn{opacity:1;}
   </style>
 
 </head>
@@ -269,7 +273,7 @@
                           <div class="vid-wrap" style="position:relative;overflow:hidden;border-radius:18px;"><video
                               src="./assets/father-approval.mp4"
                               poster="./assets/father-approval-thumb.webp"
-                              preload="metadata"
+                              preload="auto"
                               
                               playsinline
                               class="h-full w-full bg-graphite-100 object-contain aspect-[9/16] pointer-events-auto">
@@ -319,7 +323,7 @@
                           <div class="vid-wrap" style="position:relative;overflow:hidden;border-radius:18px;"><video
                               src="./assets/last-memory.mp4"
                               poster="./assets/last-memory-thumb.webp"
-                              preload="metadata"
+                              preload="auto"
                               
                               playsinline
                               class="h-full w-full bg-graphite-100 object-contain aspect-[9/16] pointer-events-auto">
@@ -369,8 +373,7 @@
                           <div class="vid-wrap" style="position:relative;overflow:hidden;border-radius:18px;"><video
                               src="./assets/brotherhood-memory.mp4"
                               poster="./assets/brotherhood-memory-thumb.webp"
-                              preload="none"
-                              loading="lazy"
+                              preload="auto"
                               playsinline
                               class="h-full w-full bg-graphite-100 object-contain aspect-[9/16] pointer-events-auto">
                             </video>
@@ -419,8 +422,7 @@
                           <div class="vid-wrap" style="position:relative;overflow:hidden;border-radius:18px;"><video
                               src="./assets/photos-to-life.mp4"
                               poster="./assets/photos-to-life-thumb.webp"
-                              preload="none"
-                              loading="lazy"
+                              preload="auto"
                               playsinline
                               class="h-full w-full bg-graphite-100 object-contain aspect-[9/16] pointer-events-auto">
                             </video>
@@ -485,8 +487,7 @@
                           <div class="vid-wrap" style="position:relative;overflow:hidden;border-radius:18px;"><video
                                 src="./assets/viral-creator.mp4"
                                 poster="./assets/viral-creator-thumb.webp"
-                                preload="none"
-                                loading="lazy"
+                                preload="auto"
                                 playsinline
                                 class="h-full w-full bg-graphite-100 object-contain aspect-[9/16] pointer-events-auto">
                               </video>
@@ -535,8 +536,7 @@
                           <div class="vid-wrap" style="position:relative;overflow:hidden;border-radius:18px;"><video
                                 src="./assets/spicy-hook.mp4"
                                 poster="./assets/spicy-hook-thumb.webp"
-                                preload="none"
-                                loading="lazy"
+                                preload="auto"
                                 playsinline
                                 class="h-full w-full bg-graphite-100 object-contain aspect-[9/16] pointer-events-auto">
                               </video>
@@ -585,8 +585,7 @@
                           <div class="vid-wrap" style="position:relative;overflow:hidden;border-radius:18px;"><video
                                 src="./assets/view-growth.mp4"
                                 poster="./assets/view-growth-thumb.webp"
-                                preload="none"
-                                loading="lazy"
+                                preload="auto"
                                 playsinline
                                 class="h-full w-full bg-graphite-100 object-contain aspect-[9/16] pointer-events-auto">
                               </video>
@@ -635,8 +634,7 @@
                           <div class="vid-wrap" style="position:relative;overflow:hidden;border-radius:18px;"><video
                                 src="./assets/slime-hook.mp4"
                                 poster="./assets/slime-hook-thumb.webp"
-                                preload="none"
-                                loading="lazy"
+                                preload="auto"
                                 playsinline
                                 class="h-full w-full bg-graphite-100 object-contain aspect-[9/16] pointer-events-auto">
                               </video>
@@ -701,8 +699,7 @@
                           <div class="vid-wrap" style="position:relative;overflow:hidden;border-radius:18px;"><video
                               src="./assets/romance-choice.mp4"
                               poster="./assets/romance-choice-thumb.webp"
-                              preload="none"
-                              loading="lazy"
+                              preload="auto"
                               playsinline
                               class="h-full w-full bg-graphite-100 object-contain aspect-[9/16] pointer-events-auto">
                             </video>
@@ -751,8 +748,7 @@
                           <div class="vid-wrap" style="position:relative;overflow:hidden;border-radius:18px;"><video
                               src="./assets/rain-kiss.mp4"
                               poster="./assets/rain-kiss-thumb.webp"
-                              preload="none"
-                              loading="lazy"
+                              preload="auto"
                               playsinline
                               class="h-full w-full bg-graphite-100 object-contain aspect-[9/16] pointer-events-auto">
                             </video>
@@ -801,8 +797,7 @@
                           <div class="vid-wrap" style="position:relative;overflow:hidden;border-radius:18px;"><video
                               src="./assets/vintage-success.mp4"
                               poster="./assets/vintage-success-thumb.webp"
-                              preload="none"
-                              loading="lazy"
+                              preload="auto"
                               playsinline
                               class="h-full w-full bg-graphite-100 object-contain aspect-[9/16] pointer-events-auto">
                             </video>
@@ -851,8 +846,7 @@
                           <div class="vid-wrap" style="position:relative;overflow:hidden;border-radius:18px;"><video
                               src="./assets/goose-hook.mp4"
                               poster="./assets/goose-hook-thumb.webp"
-                              preload="none"
-                              loading="lazy"
+                              preload="auto"
                               playsinline
                               class="h-full w-full bg-graphite-100 object-contain aspect-[9/16] pointer-events-auto">
                             </video>
@@ -917,8 +911,7 @@
                           <div class="vid-wrap" style="position:relative;overflow:hidden;border-radius:18px;"><video
                               src="./assets/karma-strikes.mp4"
                               poster="./assets/karma-strikes-thumb.webp"
-                              preload="none"
-                              loading="lazy"
+                              preload="auto"
                               playsinline
                               class="h-full w-full bg-graphite-100 object-contain aspect-[9/16] pointer-events-auto">
                             </video>
@@ -968,8 +961,7 @@
                           <div class="vid-wrap" style="position:relative;overflow:hidden;border-radius:18px;"><video
                               src="./assets/satisfying-restoring.mp4"
                               poster="./assets/satisfying-restoring-thumb.webp"
-                              preload="none"
-                              loading="lazy"
+                              preload="auto"
                               playsinline
                               class="h-full w-full bg-graphite-100 object-contain aspect-[9/16] pointer-events-auto">
                             </video>
@@ -1019,8 +1011,7 @@
                           <div class="vid-wrap" style="position:relative;overflow:hidden;border-radius:18px;"><video
                               src="./assets/gaming-memes.mp4"
                               poster="./assets/gaming-memes-thumb.webp"
-                              preload="none"
-                              loading="lazy"
+                              preload="auto"
                               playsinline
                               class="h-full w-full bg-graphite-100 object-contain aspect-[9/16] pointer-events-auto">
                             </video>
@@ -1263,9 +1254,16 @@
         playBtn.addEventListener('click', function(e){
           e.stopPropagation();
           if(video.paused){
+            // Immediately hide play button so there's no visual delay
+            wrap.classList.remove('vp-paused','vp-idle');
+            wrap.classList.add('vp-playing');
             var playPromise = video.play();
             if(playPromise !== undefined){
-              playPromise.catch(function(){});
+              playPromise.catch(function(){
+                // If play fails, revert to paused state
+                wrap.classList.remove('vp-playing');
+                wrap.classList.add('vp-paused');
+              });
             }
           } else {
             video.pause();
