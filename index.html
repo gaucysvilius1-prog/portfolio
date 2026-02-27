@@ -43,7 +43,7 @@
     @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
     *{cursor:none!important;}
     video,video *,.vid-wrap,.vid-wrap *{cursor:none!important;}
-    .mo{display:none!important;}
+    .mo{display:flex!important;}
     h2 span.custom-h2,h2 span.custom-h3,h2 span.custom-h1{color:var(--text)!important;}
     .bg-custom-bg{background:transparent!important;}
     .custom-h4{color:var(--text)!important;}
@@ -79,6 +79,42 @@
     /* STATS */
     mark.bg-custom-highlight{background:transparent!important;color:var(--accent)!important;font-size:1em;font-weight:800;text-shadow:0 0 18px rgba(63,35,234,.7);display:inline;}
     .reveal img.rounded-xl{box-shadow:0 0 0 1px rgba(63,35,234,.2),0 24px 60px rgba(0,0,0,.5);}
+    /* ── CUSTOM VIDEO PLAYER ── */
+    .vid-wrap{position:relative;overflow:hidden;border-radius:18px;cursor:pointer!important;}
+    .mo{position:absolute;inset:0;pointer-events:none;display:flex!important;flex-direction:column;justify-content:center;align-items:center;z-index:10;}
+    .mo *{pointer-events:auto;}
+
+    /* Center play/pause button */
+    .vp-center{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;}
+    .vp-playbtn{background:none;border:none;cursor:pointer!important;padding:0;width:64px;height:64px;pointer-events:auto;transition:transform .2s,opacity .2s;filter:drop-shadow(0 0 18px rgba(63,35,234,.7));}
+    .vp-playbtn:hover{transform:scale(1.1);}
+    .vp-playbtn svg{width:64px;height:64px;display:block;}
+    .vp-icon-play,.vp-icon-pause{transition:opacity .15s;}
+
+    /* Bottom controls */
+    .vp-controls{position:absolute;bottom:0;left:0;right:0;padding:.75rem .85rem .85rem;background:linear-gradient(to top,rgba(0,0,0,.75) 0%,transparent 100%);display:flex;flex-direction:column;gap:.5rem;opacity:0;transition:opacity .3s ease;pointer-events:none;}
+    .vp-controls.vp-visible{opacity:1;pointer-events:auto;}
+
+    /* Progress bar */
+    .vp-progress-wrap{width:100%;cursor:pointer;}
+    .vp-progress-bg{height:3px;background:rgba(255,255,255,.2);border-radius:2px;overflow:hidden;transition:height .15s;}
+    .vp-progress-wrap:hover .vp-progress-bg{height:5px;}
+    .vp-progress-fill{height:100%;width:0%;background:#3F23EA;border-radius:2px;box-shadow:0 0 6px rgba(63,35,234,.7);transition:width .1s linear;}
+
+    /* Bottom row */
+    .vp-bottom-row{display:flex;justify-content:space-between;align-items:center;}
+    .vp-vol,.vp-fs{background:none;border:none;cursor:pointer!important;padding:.2rem;display:flex;align-items:center;justify-content:center;opacity:.85;transition:opacity .2s,transform .2s;}
+    .vp-vol:hover,.vp-fs:hover{opacity:1;transform:scale(1.15);}
+
+    /* Paused state — show play button always */
+    .vp-paused .vp-icon-play{display:block!important;}
+    .vp-paused .vp-icon-pause{display:none!important;}
+    .vp-playing .vp-icon-play{display:none!important;}
+    .vp-playing .vp-icon-pause{display:block!important;}
+
+    /* Initial state */
+    .vp-idle .vp-controls{opacity:0!important;pointer-events:none!important;}
+    .vp-idle .vp-playbtn{opacity:1;}
   </style>
 
 </head>
@@ -233,13 +269,35 @@
                           <div class="vid-wrap" style="position:relative;overflow:hidden;border-radius:18px;"><video
                               src="./assets/father-approval.mp4"
                               poster="./assets/father-approval-thumb.webp"
-                              controls
                               preload="metadata"
                               
                               playsinline
                               class="h-full w-full bg-graphite-100 object-contain aspect-[9/16] pointer-events-auto">
                             </video>
-                            <div class="mo" style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.95),transparent 55%);opacity:0;transition:opacity .3s;pointer-events:none;display:flex;align-items:flex-end;padding:1.25rem;"><div style="width:100%"><div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:.35rem;">CTR</div><div style="height:3px;background:rgba(255,255,255,.1);border-radius:2px;margin-bottom:.75rem;"><div class="bc" style="height:100%;width:0%;background:#3F23EA;transition:width .8s ease;box-shadow:0 0 6px rgba(63,35,234,.6);border-radius:2px;"></div></div><div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:.35rem;">Hook Rate</div><div style="height:3px;background:rgba(255,255,255,.1);border-radius:2px;"><div class="bh" style="height:100%;width:0%;background:#3F23EA;transition:width .8s ease .15s;box-shadow:0 0 6px rgba(63,35,234,.6);border-radius:2px;"></div></div></div></div>
+                            <div class="mo" style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.95),transparent 55%);opacity:0;transition:opacity .3s;pointer-events:none;display:flex;align-items:flex-end;padding:1.25rem;">
+                              <div class="vp-center">
+                                <button class="vp-playbtn" aria-label="Play">
+                                  <svg class="vp-icon-play" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="11" fill="rgba(63,35,234,0.85)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/><polygon points="10,8 17,12 10,16" fill="#ffffff"/></svg>
+                                  <svg class="vp-icon-pause" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none;"><circle cx="12" cy="12" r="11" fill="rgba(63,35,234,0.85)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/><rect x="8" y="8" width="3" height="8" rx="1" fill="#ffffff"/><rect x="13" y="8" width="3" height="8" rx="1" fill="#ffffff"/></svg>
+                                </button>
+                              </div>
+                              <div class="vp-controls">
+                                <div class="vp-progress-wrap">
+                                  <div class="vp-progress-bg">
+                                    <div class="vp-progress-fill"></div>
+                                  </div>
+                                </div>
+                                <div class="vp-bottom-row">
+                                  <button class="vp-vol" aria-label="Mute">
+                                    <svg class="vp-icon-vol-on" viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M11 5L6 9H3v6h3l5 4V5z" fill="white" opacity="0.85"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                    <svg class="vp-icon-vol-off" viewBox="0 0 24 24" fill="none" width="16" height="16" style="display:none;"><path d="M11 5L6 9H3v6h3l5 4V5z" fill="white" opacity="0.85"/><line x1="23" y1="9" x2="17" y2="15" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/><line x1="17" y1="9" x2="23" y2="15" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                  </button>
+                                  <button class="vp-fs" aria-label="Fullscreen">
+                                    <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -261,13 +319,35 @@
                           <div class="vid-wrap" style="position:relative;overflow:hidden;border-radius:18px;"><video
                               src="./assets/last-memory.mp4"
                               poster="./assets/last-memory-thumb.webp"
-                              controls
                               preload="metadata"
                               
                               playsinline
                               class="h-full w-full bg-graphite-100 object-contain aspect-[9/16] pointer-events-auto">
                             </video>
-                            <div class="mo" style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.95),transparent 55%);opacity:0;transition:opacity .3s;pointer-events:none;display:flex;align-items:flex-end;padding:1.25rem;"><div style="width:100%"><div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:.35rem;">CTR</div><div style="height:3px;background:rgba(255,255,255,.1);border-radius:2px;margin-bottom:.75rem;"><div class="bc" style="height:100%;width:0%;background:#3F23EA;transition:width .8s ease;box-shadow:0 0 6px rgba(63,35,234,.6);border-radius:2px;"></div></div><div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:.35rem;">Hook Rate</div><div style="height:3px;background:rgba(255,255,255,.1);border-radius:2px;"><div class="bh" style="height:100%;width:0%;background:#3F23EA;transition:width .8s ease .15s;box-shadow:0 0 6px rgba(63,35,234,.6);border-radius:2px;"></div></div></div></div>
+                            <div class="mo" style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.95),transparent 55%);opacity:0;transition:opacity .3s;pointer-events:none;display:flex;align-items:flex-end;padding:1.25rem;">
+                              <div class="vp-center">
+                                <button class="vp-playbtn" aria-label="Play">
+                                  <svg class="vp-icon-play" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="11" fill="rgba(63,35,234,0.85)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/><polygon points="10,8 17,12 10,16" fill="#ffffff"/></svg>
+                                  <svg class="vp-icon-pause" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none;"><circle cx="12" cy="12" r="11" fill="rgba(63,35,234,0.85)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/><rect x="8" y="8" width="3" height="8" rx="1" fill="#ffffff"/><rect x="13" y="8" width="3" height="8" rx="1" fill="#ffffff"/></svg>
+                                </button>
+                              </div>
+                              <div class="vp-controls">
+                                <div class="vp-progress-wrap">
+                                  <div class="vp-progress-bg">
+                                    <div class="vp-progress-fill"></div>
+                                  </div>
+                                </div>
+                                <div class="vp-bottom-row">
+                                  <button class="vp-vol" aria-label="Mute">
+                                    <svg class="vp-icon-vol-on" viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M11 5L6 9H3v6h3l5 4V5z" fill="white" opacity="0.85"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                    <svg class="vp-icon-vol-off" viewBox="0 0 24 24" fill="none" width="16" height="16" style="display:none;"><path d="M11 5L6 9H3v6h3l5 4V5z" fill="white" opacity="0.85"/><line x1="23" y1="9" x2="17" y2="15" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/><line x1="17" y1="9" x2="23" y2="15" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                  </button>
+                                  <button class="vp-fs" aria-label="Fullscreen">
+                                    <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -289,13 +369,35 @@
                           <div class="vid-wrap" style="position:relative;overflow:hidden;border-radius:18px;"><video
                               src="./assets/brotherhood-memory.mp4"
                               poster="./assets/brotherhood-memory-thumb.webp"
-                              controls
                               preload="none"
                               loading="lazy"
                               playsinline
                               class="h-full w-full bg-graphite-100 object-contain aspect-[9/16] pointer-events-auto">
                             </video>
-                            <div class="mo" style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.95),transparent 55%);opacity:0;transition:opacity .3s;pointer-events:none;display:flex;align-items:flex-end;padding:1.25rem;"><div style="width:100%"><div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:.35rem;">CTR</div><div style="height:3px;background:rgba(255,255,255,.1);border-radius:2px;margin-bottom:.75rem;"><div class="bc" style="height:100%;width:0%;background:#3F23EA;transition:width .8s ease;box-shadow:0 0 6px rgba(63,35,234,.6);border-radius:2px;"></div></div><div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:.35rem;">Hook Rate</div><div style="height:3px;background:rgba(255,255,255,.1);border-radius:2px;"><div class="bh" style="height:100%;width:0%;background:#3F23EA;transition:width .8s ease .15s;box-shadow:0 0 6px rgba(63,35,234,.6);border-radius:2px;"></div></div></div></div>
+                            <div class="mo" style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.95),transparent 55%);opacity:0;transition:opacity .3s;pointer-events:none;display:flex;align-items:flex-end;padding:1.25rem;">
+                              <div class="vp-center">
+                                <button class="vp-playbtn" aria-label="Play">
+                                  <svg class="vp-icon-play" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="11" fill="rgba(63,35,234,0.85)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/><polygon points="10,8 17,12 10,16" fill="#ffffff"/></svg>
+                                  <svg class="vp-icon-pause" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none;"><circle cx="12" cy="12" r="11" fill="rgba(63,35,234,0.85)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/><rect x="8" y="8" width="3" height="8" rx="1" fill="#ffffff"/><rect x="13" y="8" width="3" height="8" rx="1" fill="#ffffff"/></svg>
+                                </button>
+                              </div>
+                              <div class="vp-controls">
+                                <div class="vp-progress-wrap">
+                                  <div class="vp-progress-bg">
+                                    <div class="vp-progress-fill"></div>
+                                  </div>
+                                </div>
+                                <div class="vp-bottom-row">
+                                  <button class="vp-vol" aria-label="Mute">
+                                    <svg class="vp-icon-vol-on" viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M11 5L6 9H3v6h3l5 4V5z" fill="white" opacity="0.85"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                    <svg class="vp-icon-vol-off" viewBox="0 0 24 24" fill="none" width="16" height="16" style="display:none;"><path d="M11 5L6 9H3v6h3l5 4V5z" fill="white" opacity="0.85"/><line x1="23" y1="9" x2="17" y2="15" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/><line x1="17" y1="9" x2="23" y2="15" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                  </button>
+                                  <button class="vp-fs" aria-label="Fullscreen">
+                                    <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -317,13 +419,35 @@
                           <div class="vid-wrap" style="position:relative;overflow:hidden;border-radius:18px;"><video
                               src="./assets/photos-to-life.mp4"
                               poster="./assets/photos-to-life-thumb.webp"
-                              controls
                               preload="none"
                               loading="lazy"
                               playsinline
                               class="h-full w-full bg-graphite-100 object-contain aspect-[9/16] pointer-events-auto">
                             </video>
-                            <div class="mo" style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.95),transparent 55%);opacity:0;transition:opacity .3s;pointer-events:none;display:flex;align-items:flex-end;padding:1.25rem;"><div style="width:100%"><div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:.35rem;">CTR</div><div style="height:3px;background:rgba(255,255,255,.1);border-radius:2px;margin-bottom:.75rem;"><div class="bc" style="height:100%;width:0%;background:#3F23EA;transition:width .8s ease;box-shadow:0 0 6px rgba(63,35,234,.6);border-radius:2px;"></div></div><div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:.35rem;">Hook Rate</div><div style="height:3px;background:rgba(255,255,255,.1);border-radius:2px;"><div class="bh" style="height:100%;width:0%;background:#3F23EA;transition:width .8s ease .15s;box-shadow:0 0 6px rgba(63,35,234,.6);border-radius:2px;"></div></div></div></div>
+                            <div class="mo" style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.95),transparent 55%);opacity:0;transition:opacity .3s;pointer-events:none;display:flex;align-items:flex-end;padding:1.25rem;">
+                              <div class="vp-center">
+                                <button class="vp-playbtn" aria-label="Play">
+                                  <svg class="vp-icon-play" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="11" fill="rgba(63,35,234,0.85)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/><polygon points="10,8 17,12 10,16" fill="#ffffff"/></svg>
+                                  <svg class="vp-icon-pause" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none;"><circle cx="12" cy="12" r="11" fill="rgba(63,35,234,0.85)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/><rect x="8" y="8" width="3" height="8" rx="1" fill="#ffffff"/><rect x="13" y="8" width="3" height="8" rx="1" fill="#ffffff"/></svg>
+                                </button>
+                              </div>
+                              <div class="vp-controls">
+                                <div class="vp-progress-wrap">
+                                  <div class="vp-progress-bg">
+                                    <div class="vp-progress-fill"></div>
+                                  </div>
+                                </div>
+                                <div class="vp-bottom-row">
+                                  <button class="vp-vol" aria-label="Mute">
+                                    <svg class="vp-icon-vol-on" viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M11 5L6 9H3v6h3l5 4V5z" fill="white" opacity="0.85"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                    <svg class="vp-icon-vol-off" viewBox="0 0 24 24" fill="none" width="16" height="16" style="display:none;"><path d="M11 5L6 9H3v6h3l5 4V5z" fill="white" opacity="0.85"/><line x1="23" y1="9" x2="17" y2="15" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/><line x1="17" y1="9" x2="23" y2="15" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                  </button>
+                                  <button class="vp-fs" aria-label="Fullscreen">
+                                    <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -361,13 +485,35 @@
                           <div class="vid-wrap" style="position:relative;overflow:hidden;border-radius:18px;"><video
                                 src="./assets/viral-creator.mp4"
                                 poster="./assets/viral-creator-thumb.webp"
-                                controls
                                 preload="none"
                                 loading="lazy"
                                 playsinline
                                 class="h-full w-full bg-graphite-100 object-contain aspect-[9/16] pointer-events-auto">
                               </video>
-                              <div class="mo" style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.95),transparent 55%);opacity:0;transition:opacity .3s;pointer-events:none;display:flex;align-items:flex-end;padding:1.25rem;"><div style="width:100%"><div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:.35rem;">CTR</div><div style="height:3px;background:rgba(255,255,255,.1);border-radius:2px;margin-bottom:.75rem;"><div class="bc" style="height:100%;width:0%;background:#3F23EA;transition:width .8s ease;box-shadow:0 0 6px rgba(63,35,234,.6);border-radius:2px;"></div></div><div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:.35rem;">Hook Rate</div><div style="height:3px;background:rgba(255,255,255,.1);border-radius:2px;"><div class="bh" style="height:100%;width:0%;background:#3F23EA;transition:width .8s ease .15s;box-shadow:0 0 6px rgba(63,35,234,.6);border-radius:2px;"></div></div></div></div>
+                              <div class="mo" style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.95),transparent 55%);opacity:0;transition:opacity .3s;pointer-events:none;display:flex;align-items:flex-end;padding:1.25rem;">
+                                <div class="vp-center">
+                                  <button class="vp-playbtn" aria-label="Play">
+                                    <svg class="vp-icon-play" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="11" fill="rgba(63,35,234,0.85)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/><polygon points="10,8 17,12 10,16" fill="#ffffff"/></svg>
+                                    <svg class="vp-icon-pause" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none;"><circle cx="12" cy="12" r="11" fill="rgba(63,35,234,0.85)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/><rect x="8" y="8" width="3" height="8" rx="1" fill="#ffffff"/><rect x="13" y="8" width="3" height="8" rx="1" fill="#ffffff"/></svg>
+                                  </button>
+                                </div>
+                                <div class="vp-controls">
+                                  <div class="vp-progress-wrap">
+                                    <div class="vp-progress-bg">
+                                      <div class="vp-progress-fill"></div>
+                                    </div>
+                                  </div>
+                                  <div class="vp-bottom-row">
+                                    <button class="vp-vol" aria-label="Mute">
+                                      <svg class="vp-icon-vol-on" viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M11 5L6 9H3v6h3l5 4V5z" fill="white" opacity="0.85"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                      <svg class="vp-icon-vol-off" viewBox="0 0 24 24" fill="none" width="16" height="16" style="display:none;"><path d="M11 5L6 9H3v6h3l5 4V5z" fill="white" opacity="0.85"/><line x1="23" y1="9" x2="17" y2="15" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/><line x1="17" y1="9" x2="23" y2="15" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                    </button>
+                                    <button class="vp-fs" aria-label="Fullscreen">
+                                      <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
                         </div>
                       </div>
@@ -389,13 +535,35 @@
                           <div class="vid-wrap" style="position:relative;overflow:hidden;border-radius:18px;"><video
                                 src="./assets/spicy-hook.mp4"
                                 poster="./assets/spicy-hook-thumb.webp"
-                                controls
                                 preload="none"
                                 loading="lazy"
                                 playsinline
                                 class="h-full w-full bg-graphite-100 object-contain aspect-[9/16] pointer-events-auto">
                               </video>
-                              <div class="mo" style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.95),transparent 55%);opacity:0;transition:opacity .3s;pointer-events:none;display:flex;align-items:flex-end;padding:1.25rem;"><div style="width:100%"><div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:.35rem;">CTR</div><div style="height:3px;background:rgba(255,255,255,.1);border-radius:2px;margin-bottom:.75rem;"><div class="bc" style="height:100%;width:0%;background:#3F23EA;transition:width .8s ease;box-shadow:0 0 6px rgba(63,35,234,.6);border-radius:2px;"></div></div><div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:.35rem;">Hook Rate</div><div style="height:3px;background:rgba(255,255,255,.1);border-radius:2px;"><div class="bh" style="height:100%;width:0%;background:#3F23EA;transition:width .8s ease .15s;box-shadow:0 0 6px rgba(63,35,234,.6);border-radius:2px;"></div></div></div></div>
+                              <div class="mo" style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.95),transparent 55%);opacity:0;transition:opacity .3s;pointer-events:none;display:flex;align-items:flex-end;padding:1.25rem;">
+                                <div class="vp-center">
+                                  <button class="vp-playbtn" aria-label="Play">
+                                    <svg class="vp-icon-play" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="11" fill="rgba(63,35,234,0.85)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/><polygon points="10,8 17,12 10,16" fill="#ffffff"/></svg>
+                                    <svg class="vp-icon-pause" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none;"><circle cx="12" cy="12" r="11" fill="rgba(63,35,234,0.85)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/><rect x="8" y="8" width="3" height="8" rx="1" fill="#ffffff"/><rect x="13" y="8" width="3" height="8" rx="1" fill="#ffffff"/></svg>
+                                  </button>
+                                </div>
+                                <div class="vp-controls">
+                                  <div class="vp-progress-wrap">
+                                    <div class="vp-progress-bg">
+                                      <div class="vp-progress-fill"></div>
+                                    </div>
+                                  </div>
+                                  <div class="vp-bottom-row">
+                                    <button class="vp-vol" aria-label="Mute">
+                                      <svg class="vp-icon-vol-on" viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M11 5L6 9H3v6h3l5 4V5z" fill="white" opacity="0.85"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                      <svg class="vp-icon-vol-off" viewBox="0 0 24 24" fill="none" width="16" height="16" style="display:none;"><path d="M11 5L6 9H3v6h3l5 4V5z" fill="white" opacity="0.85"/><line x1="23" y1="9" x2="17" y2="15" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/><line x1="17" y1="9" x2="23" y2="15" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                    </button>
+                                    <button class="vp-fs" aria-label="Fullscreen">
+                                      <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
                           </div>
                         </div>
                       </div>
@@ -417,13 +585,35 @@
                           <div class="vid-wrap" style="position:relative;overflow:hidden;border-radius:18px;"><video
                                 src="./assets/view-growth.mp4"
                                 poster="./assets/view-growth-thumb.webp"
-                                controls
                                 preload="none"
                                 loading="lazy"
                                 playsinline
                                 class="h-full w-full bg-graphite-100 object-contain aspect-[9/16] pointer-events-auto">
                               </video>
-                              <div class="mo" style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.95),transparent 55%);opacity:0;transition:opacity .3s;pointer-events:none;display:flex;align-items:flex-end;padding:1.25rem;"><div style="width:100%"><div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:.35rem;">CTR</div><div style="height:3px;background:rgba(255,255,255,.1);border-radius:2px;margin-bottom:.75rem;"><div class="bc" style="height:100%;width:0%;background:#3F23EA;transition:width .8s ease;box-shadow:0 0 6px rgba(63,35,234,.6);border-radius:2px;"></div></div><div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:.35rem;">Hook Rate</div><div style="height:3px;background:rgba(255,255,255,.1);border-radius:2px;"><div class="bh" style="height:100%;width:0%;background:#3F23EA;transition:width .8s ease .15s;box-shadow:0 0 6px rgba(63,35,234,.6);border-radius:2px;"></div></div></div></div>
+                              <div class="mo" style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.95),transparent 55%);opacity:0;transition:opacity .3s;pointer-events:none;display:flex;align-items:flex-end;padding:1.25rem;">
+                                <div class="vp-center">
+                                  <button class="vp-playbtn" aria-label="Play">
+                                    <svg class="vp-icon-play" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="11" fill="rgba(63,35,234,0.85)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/><polygon points="10,8 17,12 10,16" fill="#ffffff"/></svg>
+                                    <svg class="vp-icon-pause" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none;"><circle cx="12" cy="12" r="11" fill="rgba(63,35,234,0.85)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/><rect x="8" y="8" width="3" height="8" rx="1" fill="#ffffff"/><rect x="13" y="8" width="3" height="8" rx="1" fill="#ffffff"/></svg>
+                                  </button>
+                                </div>
+                                <div class="vp-controls">
+                                  <div class="vp-progress-wrap">
+                                    <div class="vp-progress-bg">
+                                      <div class="vp-progress-fill"></div>
+                                    </div>
+                                  </div>
+                                  <div class="vp-bottom-row">
+                                    <button class="vp-vol" aria-label="Mute">
+                                      <svg class="vp-icon-vol-on" viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M11 5L6 9H3v6h3l5 4V5z" fill="white" opacity="0.85"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                      <svg class="vp-icon-vol-off" viewBox="0 0 24 24" fill="none" width="16" height="16" style="display:none;"><path d="M11 5L6 9H3v6h3l5 4V5z" fill="white" opacity="0.85"/><line x1="23" y1="9" x2="17" y2="15" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/><line x1="17" y1="9" x2="23" y2="15" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                    </button>
+                                    <button class="vp-fs" aria-label="Fullscreen">
+                                      <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
                           </div>
                         </div>
                       </div>
@@ -445,13 +635,35 @@
                           <div class="vid-wrap" style="position:relative;overflow:hidden;border-radius:18px;"><video
                                 src="./assets/slime-hook.mp4"
                                 poster="./assets/slime-hook-thumb.webp"
-                                controls
                                 preload="none"
                                 loading="lazy"
                                 playsinline
                                 class="h-full w-full bg-graphite-100 object-contain aspect-[9/16] pointer-events-auto">
                               </video>
-                              <div class="mo" style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.95),transparent 55%);opacity:0;transition:opacity .3s;pointer-events:none;display:flex;align-items:flex-end;padding:1.25rem;"><div style="width:100%"><div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:.35rem;">CTR</div><div style="height:3px;background:rgba(255,255,255,.1);border-radius:2px;margin-bottom:.75rem;"><div class="bc" style="height:100%;width:0%;background:#3F23EA;transition:width .8s ease;box-shadow:0 0 6px rgba(63,35,234,.6);border-radius:2px;"></div></div><div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:.35rem;">Hook Rate</div><div style="height:3px;background:rgba(255,255,255,.1);border-radius:2px;"><div class="bh" style="height:100%;width:0%;background:#3F23EA;transition:width .8s ease .15s;box-shadow:0 0 6px rgba(63,35,234,.6);border-radius:2px;"></div></div></div></div>
+                              <div class="mo" style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.95),transparent 55%);opacity:0;transition:opacity .3s;pointer-events:none;display:flex;align-items:flex-end;padding:1.25rem;">
+                                <div class="vp-center">
+                                  <button class="vp-playbtn" aria-label="Play">
+                                    <svg class="vp-icon-play" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="11" fill="rgba(63,35,234,0.85)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/><polygon points="10,8 17,12 10,16" fill="#ffffff"/></svg>
+                                    <svg class="vp-icon-pause" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none;"><circle cx="12" cy="12" r="11" fill="rgba(63,35,234,0.85)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/><rect x="8" y="8" width="3" height="8" rx="1" fill="#ffffff"/><rect x="13" y="8" width="3" height="8" rx="1" fill="#ffffff"/></svg>
+                                  </button>
+                                </div>
+                                <div class="vp-controls">
+                                  <div class="vp-progress-wrap">
+                                    <div class="vp-progress-bg">
+                                      <div class="vp-progress-fill"></div>
+                                    </div>
+                                  </div>
+                                  <div class="vp-bottom-row">
+                                    <button class="vp-vol" aria-label="Mute">
+                                      <svg class="vp-icon-vol-on" viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M11 5L6 9H3v6h3l5 4V5z" fill="white" opacity="0.85"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                      <svg class="vp-icon-vol-off" viewBox="0 0 24 24" fill="none" width="16" height="16" style="display:none;"><path d="M11 5L6 9H3v6h3l5 4V5z" fill="white" opacity="0.85"/><line x1="23" y1="9" x2="17" y2="15" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/><line x1="17" y1="9" x2="23" y2="15" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                    </button>
+                                    <button class="vp-fs" aria-label="Fullscreen">
+                                      <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
                           </div>
                         </div>
                       </div>
@@ -489,13 +701,35 @@
                           <div class="vid-wrap" style="position:relative;overflow:hidden;border-radius:18px;"><video
                               src="./assets/romance-choice.mp4"
                               poster="./assets/romance-choice-thumb.webp"
-                              controls
                               preload="none"
                               loading="lazy"
                               playsinline
                               class="h-full w-full bg-graphite-100 object-contain aspect-[9/16] pointer-events-auto">
                             </video>
-                            <div class="mo" style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.95),transparent 55%);opacity:0;transition:opacity .3s;pointer-events:none;display:flex;align-items:flex-end;padding:1.25rem;"><div style="width:100%"><div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:.35rem;">CTR</div><div style="height:3px;background:rgba(255,255,255,.1);border-radius:2px;margin-bottom:.75rem;"><div class="bc" style="height:100%;width:0%;background:#3F23EA;transition:width .8s ease;box-shadow:0 0 6px rgba(63,35,234,.6);border-radius:2px;"></div></div><div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:.35rem;">Hook Rate</div><div style="height:3px;background:rgba(255,255,255,.1);border-radius:2px;"><div class="bh" style="height:100%;width:0%;background:#3F23EA;transition:width .8s ease .15s;box-shadow:0 0 6px rgba(63,35,234,.6);border-radius:2px;"></div></div></div></div>
+                              <div class="mo" style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.95),transparent 55%);opacity:0;transition:opacity .3s;pointer-events:none;display:flex;align-items:flex-end;padding:1.25rem;">
+                                <div class="vp-center">
+                                  <button class="vp-playbtn" aria-label="Play">
+                                    <svg class="vp-icon-play" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="11" fill="rgba(63,35,234,0.85)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/><polygon points="10,8 17,12 10,16" fill="#ffffff"/></svg>
+                                    <svg class="vp-icon-pause" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none;"><circle cx="12" cy="12" r="11" fill="rgba(63,35,234,0.85)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/><rect x="8" y="8" width="3" height="8" rx="1" fill="#ffffff"/><rect x="13" y="8" width="3" height="8" rx="1" fill="#ffffff"/></svg>
+                                  </button>
+                                </div>
+                                <div class="vp-controls">
+                                  <div class="vp-progress-wrap">
+                                    <div class="vp-progress-bg">
+                                      <div class="vp-progress-fill"></div>
+                                    </div>
+                                  </div>
+                                  <div class="vp-bottom-row">
+                                    <button class="vp-vol" aria-label="Mute">
+                                      <svg class="vp-icon-vol-on" viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M11 5L6 9H3v6h3l5 4V5z" fill="white" opacity="0.85"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                      <svg class="vp-icon-vol-off" viewBox="0 0 24 24" fill="none" width="16" height="16" style="display:none;"><path d="M11 5L6 9H3v6h3l5 4V5z" fill="white" opacity="0.85"/><line x1="23" y1="9" x2="17" y2="15" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/><line x1="17" y1="9" x2="23" y2="15" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                    </button>
+                                    <button class="vp-fs" aria-label="Fullscreen">
+                                      <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
                         </div>
                         </div>
                       </div>
@@ -517,13 +751,35 @@
                           <div class="vid-wrap" style="position:relative;overflow:hidden;border-radius:18px;"><video
                               src="./assets/rain-kiss.mp4"
                               poster="./assets/rain-kiss-thumb.webp"
-                              controls
                               preload="none"
                               loading="lazy"
                               playsinline
                               class="h-full w-full bg-graphite-100 object-contain aspect-[9/16] pointer-events-auto">
                             </video>
-                            <div class="mo" style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.95),transparent 55%);opacity:0;transition:opacity .3s;pointer-events:none;display:flex;align-items:flex-end;padding:1.25rem;"><div style="width:100%"><div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:.35rem;">CTR</div><div style="height:3px;background:rgba(255,255,255,.1);border-radius:2px;margin-bottom:.75rem;"><div class="bc" style="height:100%;width:0%;background:#3F23EA;transition:width .8s ease;box-shadow:0 0 6px rgba(63,35,234,.6);border-radius:2px;"></div></div><div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:.35rem;">Hook Rate</div><div style="height:3px;background:rgba(255,255,255,.1);border-radius:2px;"><div class="bh" style="height:100%;width:0%;background:#3F23EA;transition:width .8s ease .15s;box-shadow:0 0 6px rgba(63,35,234,.6);border-radius:2px;"></div></div></div></div>
+                            <div class="mo" style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.95),transparent 55%);opacity:0;transition:opacity .3s;pointer-events:none;display:flex;align-items:flex-end;padding:1.25rem;">
+                              <div class="vp-center">
+                                <button class="vp-playbtn" aria-label="Play">
+                                  <svg class="vp-icon-play" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="11" fill="rgba(63,35,234,0.85)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/><polygon points="10,8 17,12 10,16" fill="#ffffff"/></svg>
+                                  <svg class="vp-icon-pause" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none;"><circle cx="12" cy="12" r="11" fill="rgba(63,35,234,0.85)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/><rect x="8" y="8" width="3" height="8" rx="1" fill="#ffffff"/><rect x="13" y="8" width="3" height="8" rx="1" fill="#ffffff"/></svg>
+                                </button>
+                              </div>
+                              <div class="vp-controls">
+                                <div class="vp-progress-wrap">
+                                  <div class="vp-progress-bg">
+                                    <div class="vp-progress-fill"></div>
+                                  </div>
+                                </div>
+                                <div class="vp-bottom-row">
+                                  <button class="vp-vol" aria-label="Mute">
+                                    <svg class="vp-icon-vol-on" viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M11 5L6 9H3v6h3l5 4V5z" fill="white" opacity="0.85"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                    <svg class="vp-icon-vol-off" viewBox="0 0 24 24" fill="none" width="16" height="16" style="display:none;"><path d="M11 5L6 9H3v6h3l5 4V5z" fill="white" opacity="0.85"/><line x1="23" y1="9" x2="17" y2="15" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/><line x1="17" y1="9" x2="23" y2="15" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                  </button>
+                                  <button class="vp-fs" aria-label="Fullscreen">
+                                    <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
                         </div>
                         </div>
                       </div>
@@ -545,13 +801,35 @@
                           <div class="vid-wrap" style="position:relative;overflow:hidden;border-radius:18px;"><video
                               src="./assets/vintage-success.mp4"
                               poster="./assets/vintage-success-thumb.webp"
-                              controls
                               preload="none"
                               loading="lazy"
                               playsinline
                               class="h-full w-full bg-graphite-100 object-contain aspect-[9/16] pointer-events-auto">
                             </video>
-                            <div class="mo" style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.95),transparent 55%);opacity:0;transition:opacity .3s;pointer-events:none;display:flex;align-items:flex-end;padding:1.25rem;"><div style="width:100%"><div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:.35rem;">CTR</div><div style="height:3px;background:rgba(255,255,255,.1);border-radius:2px;margin-bottom:.75rem;"><div class="bc" style="height:100%;width:0%;background:#3F23EA;transition:width .8s ease;box-shadow:0 0 6px rgba(63,35,234,.6);border-radius:2px;"></div></div><div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:.35rem;">Hook Rate</div><div style="height:3px;background:rgba(255,255,255,.1);border-radius:2px;"><div class="bh" style="height:100%;width:0%;background:#3F23EA;transition:width .8s ease .15s;box-shadow:0 0 6px rgba(63,35,234,.6);border-radius:2px;"></div></div></div></div>
+                            <div class="mo" style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.95),transparent 55%);opacity:0;transition:opacity .3s;pointer-events:none;display:flex;align-items:flex-end;padding:1.25rem;">
+                              <div class="vp-center">
+                                <button class="vp-playbtn" aria-label="Play">
+                                  <svg class="vp-icon-play" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="11" fill="rgba(63,35,234,0.85)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/><polygon points="10,8 17,12 10,16" fill="#ffffff"/></svg>
+                                  <svg class="vp-icon-pause" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none;"><circle cx="12" cy="12" r="11" fill="rgba(63,35,234,0.85)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/><rect x="8" y="8" width="3" height="8" rx="1" fill="#ffffff"/><rect x="13" y="8" width="3" height="8" rx="1" fill="#ffffff"/></svg>
+                                </button>
+                              </div>
+                              <div class="vp-controls">
+                                <div class="vp-progress-wrap">
+                                  <div class="vp-progress-bg">
+                                    <div class="vp-progress-fill"></div>
+                                  </div>
+                                </div>
+                                <div class="vp-bottom-row">
+                                  <button class="vp-vol" aria-label="Mute">
+                                    <svg class="vp-icon-vol-on" viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M11 5L6 9H3v6h3l5 4V5z" fill="white" opacity="0.85"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                    <svg class="vp-icon-vol-off" viewBox="0 0 24 24" fill="none" width="16" height="16" style="display:none;"><path d="M11 5L6 9H3v6h3l5 4V5z" fill="white" opacity="0.85"/><line x1="23" y1="9" x2="17" y2="15" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/><line x1="17" y1="9" x2="23" y2="15" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                  </button>
+                                  <button class="vp-fs" aria-label="Fullscreen">
+                                    <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
                         </div>
                         </div>
                       </div>
@@ -573,13 +851,35 @@
                           <div class="vid-wrap" style="position:relative;overflow:hidden;border-radius:18px;"><video
                               src="./assets/goose-hook.mp4"
                               poster="./assets/goose-hook-thumb.webp"
-                              controls
                               preload="none"
                               loading="lazy"
                               playsinline
                               class="h-full w-full bg-graphite-100 object-contain aspect-[9/16] pointer-events-auto">
                             </video>
-                            <div class="mo" style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.95),transparent 55%);opacity:0;transition:opacity .3s;pointer-events:none;display:flex;align-items:flex-end;padding:1.25rem;"><div style="width:100%"><div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:.35rem;">CTR</div><div style="height:3px;background:rgba(255,255,255,.1);border-radius:2px;margin-bottom:.75rem;"><div class="bc" style="height:100%;width:0%;background:#3F23EA;transition:width .8s ease;box-shadow:0 0 6px rgba(63,35,234,.6);border-radius:2px;"></div></div><div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:.35rem;">Hook Rate</div><div style="height:3px;background:rgba(255,255,255,.1);border-radius:2px;"><div class="bh" style="height:100%;width:0%;background:#3F23EA;transition:width .8s ease .15s;box-shadow:0 0 6px rgba(63,35,234,.6);border-radius:2px;"></div></div></div></div>
+                            <div class="mo" style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.95),transparent 55%);opacity:0;transition:opacity .3s;pointer-events:none;display:flex;align-items:flex-end;padding:1.25rem;">
+                              <div class="vp-center">
+                                <button class="vp-playbtn" aria-label="Play">
+                                  <svg class="vp-icon-play" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="11" fill="rgba(63,35,234,0.85)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/><polygon points="10,8 17,12 10,16" fill="#ffffff"/></svg>
+                                  <svg class="vp-icon-pause" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none;"><circle cx="12" cy="12" r="11" fill="rgba(63,35,234,0.85)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/><rect x="8" y="8" width="3" height="8" rx="1" fill="#ffffff"/><rect x="13" y="8" width="3" height="8" rx="1" fill="#ffffff"/></svg>
+                                </button>
+                              </div>
+                              <div class="vp-controls">
+                                <div class="vp-progress-wrap">
+                                  <div class="vp-progress-bg">
+                                    <div class="vp-progress-fill"></div>
+                                  </div>
+                                </div>
+                                <div class="vp-bottom-row">
+                                  <button class="vp-vol" aria-label="Mute">
+                                    <svg class="vp-icon-vol-on" viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M11 5L6 9H3v6h3l5 4V5z" fill="white" opacity="0.85"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                    <svg class="vp-icon-vol-off" viewBox="0 0 24 24" fill="none" width="16" height="16" style="display:none;"><path d="M11 5L6 9H3v6h3l5 4V5z" fill="white" opacity="0.85"/><line x1="23" y1="9" x2="17" y2="15" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/><line x1="17" y1="9" x2="23" y2="15" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                  </button>
+                                  <button class="vp-fs" aria-label="Fullscreen">
+                                    <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
                         </div>
                         </div>
                       </div>
@@ -603,7 +903,7 @@
                   <div
                     class="col-span-full col-start-1 @tablet:col-span-6 @tablet:col-start-2 @laptop:col-span-8 @laptop:col-start-2 py-2 @tablet:py-4 @laptop:py-6">
                     <div class="space-y-text-block text-left">
-                      <h2 class="relative reveal organic-label" data-label="ORGANIC" style="font-weight:600;letter-spacing:.02em;padding-left:1rem;border-left:3px solid #34d399;color:#f0f0f0;line-height:1.3;opacity:.9;white-space:normal;overflow:visible;"><span class="custom-h2">Organic — Best Performers</span></h2>
+                      <h2 class="relative reveal organic-label" data-label="ORGANIC" style="font-weight:600;letter-spacing:.02em;padding-left:1rem;border-left:3px solid #34d399;color:#f0f0f0;line-height:1.3;opacity:.9;white-space:normal;overflow:visible;"><span class="custom-h2">Best Performers</span></h2>
                     </div>
                   </div>
                 </div>
@@ -617,13 +917,35 @@
                           <div class="vid-wrap" style="position:relative;overflow:hidden;border-radius:18px;"><video
                               src="./assets/karma-strikes.mp4"
                               poster="./assets/karma-strikes-thumb.webp"
-                              controls
                               preload="none"
                               loading="lazy"
                               playsinline
                               class="h-full w-full bg-graphite-100 object-contain aspect-[9/16] pointer-events-auto">
                             </video>
-                            <div class="mo" style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.95),transparent 55%);opacity:0;transition:opacity .3s;pointer-events:none;display:flex;align-items:flex-end;padding:1.25rem;"><div style="width:100%"><div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:.35rem;">CTR</div><div style="height:3px;background:rgba(255,255,255,.1);border-radius:2px;margin-bottom:.75rem;"><div class="bc" style="height:100%;width:0%;background:#3F23EA;transition:width .8s ease;box-shadow:0 0 6px rgba(63,35,234,.6);border-radius:2px;"></div></div><div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:.35rem;">Hook Rate</div><div style="height:3px;background:rgba(255,255,255,.1);border-radius:2px;"><div class="bh" style="height:100%;width:0%;background:#3F23EA;transition:width .8s ease .15s;box-shadow:0 0 6px rgba(63,35,234,.6);border-radius:2px;"></div></div></div></div>
+                            <div class="mo" style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.95),transparent 55%);opacity:0;transition:opacity .3s;pointer-events:none;display:flex;align-items:flex-end;padding:1.25rem;">
+                              <div class="vp-center">
+                                <button class="vp-playbtn" aria-label="Play">
+                                  <svg class="vp-icon-play" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="11" fill="rgba(63,35,234,0.85)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/><polygon points="10,8 17,12 10,16" fill="#ffffff"/></svg>
+                                  <svg class="vp-icon-pause" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none;"><circle cx="12" cy="12" r="11" fill="rgba(63,35,234,0.85)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/><rect x="8" y="8" width="3" height="8" rx="1" fill="#ffffff"/><rect x="13" y="8" width="3" height="8" rx="1" fill="#ffffff"/></svg>
+                                </button>
+                              </div>
+                              <div class="vp-controls">
+                                <div class="vp-progress-wrap">
+                                  <div class="vp-progress-bg">
+                                    <div class="vp-progress-fill"></div>
+                                  </div>
+                                </div>
+                                <div class="vp-bottom-row">
+                                  <button class="vp-vol" aria-label="Mute">
+                                    <svg class="vp-icon-vol-on" viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M11 5L6 9H3v6h3l5 4V5z" fill="white" opacity="0.85"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                    <svg class="vp-icon-vol-off" viewBox="0 0 24 24" fill="none" width="16" height="16" style="display:none;"><path d="M11 5L6 9H3v6h3l5 4V5z" fill="white" opacity="0.85"/><line x1="23" y1="9" x2="17" y2="15" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/><line x1="17" y1="9" x2="23" y2="15" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                  </button>
+                                  <button class="vp-fs" aria-label="Fullscreen">
+                                    <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
                         </div>
                         </div>
                       </div>
@@ -646,13 +968,35 @@
                           <div class="vid-wrap" style="position:relative;overflow:hidden;border-radius:18px;"><video
                               src="./assets/satisfying-restoring.mp4"
                               poster="./assets/satisfying-restoring-thumb.webp"
-                              controls
                               preload="none"
                               loading="lazy"
                               playsinline
                               class="h-full w-full bg-graphite-100 object-contain aspect-[9/16] pointer-events-auto">
                             </video>
-                            <div class="mo" style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.95),transparent 55%);opacity:0;transition:opacity .3s;pointer-events:none;display:flex;align-items:flex-end;padding:1.25rem;"><div style="width:100%"><div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:.35rem;">CTR</div><div style="height:3px;background:rgba(255,255,255,.1);border-radius:2px;margin-bottom:.75rem;"><div class="bc" style="height:100%;width:0%;background:#3F23EA;transition:width .8s ease;box-shadow:0 0 6px rgba(63,35,234,.6);border-radius:2px;"></div></div><div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:.35rem;">Hook Rate</div><div style="height:3px;background:rgba(255,255,255,.1);border-radius:2px;"><div class="bh" style="height:100%;width:0%;background:#3F23EA;transition:width .8s ease .15s;box-shadow:0 0 6px rgba(63,35,234,.6);border-radius:2px;"></div></div></div></div>
+                            <div class="mo" style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.95),transparent 55%);opacity:0;transition:opacity .3s;pointer-events:none;display:flex;align-items:flex-end;padding:1.25rem;">
+                              <div class="vp-center">
+                                <button class="vp-playbtn" aria-label="Play">
+                                  <svg class="vp-icon-play" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="11" fill="rgba(63,35,234,0.85)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/><polygon points="10,8 17,12 10,16" fill="#ffffff"/></svg>
+                                  <svg class="vp-icon-pause" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none;"><circle cx="12" cy="12" r="11" fill="rgba(63,35,234,0.85)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/><rect x="8" y="8" width="3" height="8" rx="1" fill="#ffffff"/><rect x="13" y="8" width="3" height="8" rx="1" fill="#ffffff"/></svg>
+                                </button>
+                              </div>
+                              <div class="vp-controls">
+                                <div class="vp-progress-wrap">
+                                  <div class="vp-progress-bg">
+                                    <div class="vp-progress-fill"></div>
+                                  </div>
+                                </div>
+                                <div class="vp-bottom-row">
+                                  <button class="vp-vol" aria-label="Mute">
+                                    <svg class="vp-icon-vol-on" viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M11 5L6 9H3v6h3l5 4V5z" fill="white" opacity="0.85"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                    <svg class="vp-icon-vol-off" viewBox="0 0 24 24" fill="none" width="16" height="16" style="display:none;"><path d="M11 5L6 9H3v6h3l5 4V5z" fill="white" opacity="0.85"/><line x1="23" y1="9" x2="17" y2="15" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/><line x1="17" y1="9" x2="23" y2="15" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                  </button>
+                                  <button class="vp-fs" aria-label="Fullscreen">
+                                    <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
                         </div>
                         </div>
                       </div>
@@ -675,13 +1019,35 @@
                           <div class="vid-wrap" style="position:relative;overflow:hidden;border-radius:18px;"><video
                               src="./assets/gaming-memes.mp4"
                               poster="./assets/gaming-memes-thumb.webp"
-                              controls
                               preload="none"
                               loading="lazy"
                               playsinline
                               class="h-full w-full bg-graphite-100 object-contain aspect-[9/16] pointer-events-auto">
                             </video>
-                            <div class="mo" style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.95),transparent 55%);opacity:0;transition:opacity .3s;pointer-events:none;display:flex;align-items:flex-end;padding:1.25rem;"><div style="width:100%"><div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:.35rem;">CTR</div><div style="height:3px;background:rgba(255,255,255,.1);border-radius:2px;margin-bottom:.75rem;"><div class="bc" style="height:100%;width:0%;background:#3F23EA;transition:width .8s ease;box-shadow:0 0 6px rgba(63,35,234,.6);border-radius:2px;"></div></div><div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:.35rem;">Hook Rate</div><div style="height:3px;background:rgba(255,255,255,.1);border-radius:2px;"><div class="bh" style="height:100%;width:0%;background:#3F23EA;transition:width .8s ease .15s;box-shadow:0 0 6px rgba(63,35,234,.6);border-radius:2px;"></div></div></div></div>
+                            <div class="mo" style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.95),transparent 55%);opacity:0;transition:opacity .3s;pointer-events:none;display:flex;align-items:flex-end;padding:1.25rem;">
+                              <div class="vp-center">
+                                <button class="vp-playbtn" aria-label="Play">
+                                  <svg class="vp-icon-play" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="11" fill="rgba(63,35,234,0.85)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/><polygon points="10,8 17,12 10,16" fill="#ffffff"/></svg>
+                                  <svg class="vp-icon-pause" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none;"><circle cx="12" cy="12" r="11" fill="rgba(63,35,234,0.85)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/><rect x="8" y="8" width="3" height="8" rx="1" fill="#ffffff"/><rect x="13" y="8" width="3" height="8" rx="1" fill="#ffffff"/></svg>
+                                </button>
+                              </div>
+                              <div class="vp-controls">
+                                <div class="vp-progress-wrap">
+                                  <div class="vp-progress-bg">
+                                    <div class="vp-progress-fill"></div>
+                                  </div>
+                                </div>
+                                <div class="vp-bottom-row">
+                                  <button class="vp-vol" aria-label="Mute">
+                                    <svg class="vp-icon-vol-on" viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M11 5L6 9H3v6h3l5 4V5z" fill="white" opacity="0.85"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                    <svg class="vp-icon-vol-off" viewBox="0 0 24 24" fill="none" width="16" height="16" style="display:none;"><path d="M11 5L6 9H3v6h3l5 4V5z" fill="white" opacity="0.85"/><line x1="23" y1="9" x2="17" y2="15" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/><line x1="17" y1="9" x2="23" y2="15" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                  </button>
+                                  <button class="vp-fs" aria-label="Fullscreen">
+                                    <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/></svg>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
                         </div>
                         </div>
                       </div>
@@ -841,6 +1207,134 @@
           const iv=setInterval(()=>{s=Math.min(s+t/100,t);const d=t>=1e9?Math.round(s/1e9)+'B':t>=1000?Math.round(s/1000)+'k':Math.round(s)+'';e.target.querySelector('mark').textContent=d+'+';if(s>=t)clearInterval(iv);},18);
         }
       },{threshold:.5}).observe(el));
+    </script>
+    <script>
+    (function(){
+      document.querySelectorAll('.vid-wrap').forEach(function(wrap){
+        const video = wrap.querySelector('video');
+        const mo = wrap.querySelector('.mo');
+        if(!video || !mo) return;
+
+        // Inject structure references
+        const playBtn = mo.querySelector('.vp-playbtn');
+        const iconPlay = mo.querySelector('.vp-icon-play');
+        const iconPause = mo.querySelector('.vp-icon-pause');
+        const controls = mo.querySelector('.vp-controls');
+        const progressFill = mo.querySelector('.vp-progress-fill');
+        const progressWrap = mo.querySelector('.vp-progress-wrap');
+        const volBtn = mo.querySelector('.vp-vol');
+        const iconVolOn = mo.querySelector('.vp-icon-vol-on');
+        const iconVolOff = mo.querySelector('.vp-icon-vol-off');
+        const fsBtn = mo.querySelector('.vp-fs');
+
+        let hideTimer = null;
+        let isIdle = true;
+
+        // Set initial idle state
+        wrap.classList.add('vp-idle','vp-paused');
+
+        function showControls(){
+          if(isIdle) return;
+          controls.classList.add('vp-visible');
+          clearTimeout(hideTimer);
+          hideTimer = setTimeout(function(){
+            if(!video.paused) controls.classList.remove('vp-visible');
+          }, 3000);
+        }
+
+        function startPlaying(){
+          isIdle = false;
+          wrap.classList.remove('vp-idle','vp-paused');
+          wrap.classList.add('vp-playing');
+          controls.classList.add('vp-visible');
+          clearTimeout(hideTimer);
+          hideTimer = setTimeout(function(){
+            controls.classList.remove('vp-visible');
+          }, 3000);
+        }
+
+        function setPaused(){
+          wrap.classList.remove('vp-playing');
+          wrap.classList.add('vp-paused');
+          controls.classList.remove('vp-visible');
+        }
+
+        // Play/pause button click
+        playBtn.addEventListener('click', function(e){
+          e.stopPropagation();
+          if(video.paused){
+            video.play();
+          } else {
+            video.pause();
+          }
+        });
+
+        // Video events
+        video.addEventListener('play', function(){
+          startPlaying();
+        });
+
+        video.addEventListener('pause', function(){
+          setPaused();
+        });
+
+        video.addEventListener('ended', function(){
+          isIdle = true;
+          wrap.classList.remove('vp-playing');
+          wrap.classList.add('vp-idle','vp-paused');
+          controls.classList.remove('vp-visible');
+        });
+
+        // Progress bar update
+        video.addEventListener('timeupdate', function(){
+          if(video.duration){
+            progressFill.style.width = (video.currentTime / video.duration * 100) + '%';
+          }
+        });
+
+        // Seek on progress bar click
+        progressWrap.addEventListener('click', function(e){
+          e.stopPropagation();
+          const rect = progressWrap.getBoundingClientRect();
+          const ratio = (e.clientX - rect.left) / rect.width;
+          video.currentTime = ratio * video.duration;
+          showControls();
+        });
+
+        // Volume toggle
+        volBtn.addEventListener('click', function(e){
+          e.stopPropagation();
+          video.muted = !video.muted;
+          iconVolOn.style.display = video.muted ? 'none' : 'block';
+          iconVolOff.style.display = video.muted ? 'block' : 'none';
+          showControls();
+        });
+
+        // Fullscreen
+        fsBtn.addEventListener('click', function(e){
+          e.stopPropagation();
+          if(document.fullscreenElement){
+            document.exitFullscreen();
+          } else {
+            wrap.requestFullscreen && wrap.requestFullscreen();
+          }
+          showControls();
+        });
+
+        // Hover/tap on wrap to show controls during playback
+        wrap.addEventListener('mouseenter', function(){
+          if(!video.paused && !isIdle) showControls();
+        });
+
+        wrap.addEventListener('click', function(){
+          if(!isIdle && video.paused){
+            video.play();
+          } else if(!isIdle && !video.paused){
+            showControls();
+          }
+        });
+      });
+    })();
     </script>
   </body>
 </html>
