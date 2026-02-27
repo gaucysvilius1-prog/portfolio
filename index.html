@@ -48,7 +48,7 @@
     .bg-custom-bg{background:transparent!important;}
     .custom-h4{color:var(--text)!important;}
     mark.bg-custom-highlight{background:rgba(63,35,234,.2)!important;color:var(--text)!important;}
-    h2.reveal{font-size:clamp(1.3rem,2.8vw,2rem)!important;font-weight:600!important;letter-spacing:-.01em!important;opacity:.95;}
+    h2.reveal{font-size:clamp(.9rem,1.4vw,1.25rem)!important;font-weight:600!important;letter-spacing:-.01em!important;opacity:.95;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
     .custom-p span{color:rgba(240,240,240,.75)!important;}
     .section-wrapper{background:var(--bg)!important;}
     h4 span.custom-h4{color:var(--text)!important;font-size:1rem!important;font-weight:600!important;}
@@ -76,7 +76,7 @@
     #work-paid,#work-influencer,#work-goose,#work-organic{border-top:1px solid rgba(63,35,234,.12);position:relative;}
     #work-paid::before,#work-influencer::before,#work-goose::before,#work-organic::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(63,35,234,.05),transparent 70%);pointer-events:none;}
     /* STATS */
-    mark.bg-custom-highlight{background:transparent!important;color:var(--accent)!important;font-size:2.2rem;font-weight:900;text-shadow:0 0 30px rgba(63,35,234,.5);}
+    mark.bg-custom-highlight{background:transparent!important;color:var(--accent)!important;font-size:1em;font-weight:800;text-shadow:0 0 18px rgba(63,35,234,.7);display:inline;}
     .reveal img.rounded-xl{box-shadow:0 0 0 1px rgba(63,35,234,.2),0 24px 60px rgba(0,0,0,.5);}
   </style>
 
@@ -134,7 +134,7 @@
                 class="mx-auto grid w-full grid-cols-4 gap-x-6 px-6 @tablet:grid-cols-8 @laptop:grid-cols-14 @laptop:gap-x-12 max-w-screen-desktop space-y-12 @laptop:space-y-0 py-12 items-center" style="padding:6rem 2rem;max-width:1200px;margin:0 auto;background:linear-gradient(to bottom, rgba(63,35,234,.04), transparent);">
                 <div
                   class="relative cursor-auto col-span-full @tablet:col-span-6 @tablet:col-start-2 @laptop:row-start-1 @laptop:col-start-2 @laptop:col-span-6 reveal">
-                  <div style="border-radius:20px;overflow:hidden;box-shadow:0 0 0 1px rgba(63,35,234,.3),0 0 60px rgba(63,35,234,.18),0 30px 70px rgba(0,0,0,.55);position:relative;">
+                  <div style="border-radius:20px;overflow:hidden;box-shadow:0 0 0 2px rgba(63,35,234,.55),0 0 55px rgba(63,35,234,.22),0 30px 70px rgba(0,0,0,.55);position:relative;outline:1px solid rgba(255,255,255,.04);outline-offset:-1px;">
                     <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(63,35,234,.08) 0%,transparent 50%);pointer-events:none;z-index:1;border-radius:20px;"></div>
                     <img
                           src="./assets/images/hero_bg.jpg"
@@ -723,9 +723,9 @@
               <div
                 class="mx-auto grid w-full grid-cols-4 gap-x-6 px-6 @tablet:grid-cols-8 @laptop:grid-cols-14 @laptop:gap-x-12 max-w-screen-desktop">
                 <section
-                  class="col-span-full py-12 @tablet:col-span-6 @tablet:col-start-2 @tablet:py-14 @laptop:col-span-12 @laptop:col-start-2 @laptop:py-18">
+                  class="col-span-full py-12 @tablet:col-span-6 @tablet:col-start-2 @tablet:py-14 @laptop:col-span-12 @laptop:col-start-2 @laptop:py-18" style="padding-top:.75rem!important;padding-bottom:.75rem!important;">
                   <div
-                    class="grid justify-between justify-items-center gap-6 bg-custom-bg text-center grid-cols-4 @tablet:grid-cols-3 @laptop:grid-cols-3" style="background:transparent!important;padding:2rem 0;">
+                    class="grid justify-between justify-items-center gap-6 bg-custom-bg text-center grid-cols-4 @tablet:grid-cols-3 @laptop:grid-cols-3" style="background:transparent!important;padding:.5rem 0;">
                     <div class="relative w-full flex-1 col-span-2 @tablet:col-span-1 @laptop:col-span-1">
                       <div class="relative w-full">
                         <div class="relative h-6 tablet:h-8 laptop:h-10">
